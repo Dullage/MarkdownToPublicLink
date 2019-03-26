@@ -1,0 +1,23 @@
+{% from 'header.html' import header %}
+
+<!doctype html>
+
+<html lang="en">
+
+{{ header(published_file.filename_ex_ext) }}
+
+<body>
+  <div id="inner-body">
+
+    {{ published_file.html }}
+
+  </div>
+
+  <div id="footer">
+    <span>{{ published_file.filename }}</span>
+    <span class="footer-separator">|</span>
+    <span>Published using <a href="https://github.com/Dullage/MarkdownToPublicLink"><span class="mdi mdi-github-circle color-inherit"></span>  MarkdownToPublicLink</a></span>
+  </div>
+</body>
+
+</html>
