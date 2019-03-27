@@ -9,11 +9,10 @@ import language
 
 BASE_PATH = environ["MDTPL_BASE_PATH"]  # TODO: Check for trailing slash.
 PUBLISH_PASSWORD = environ["MDTPL_PUBLISH_PASSWORD"]
-DATABASE_PATH = environ.get('MDTPL_DATABASE_PATH', 'database.db')
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] \
-    = f"sqlite:///{DATABASE_PATH}"
+    = "sqlite:///database.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)

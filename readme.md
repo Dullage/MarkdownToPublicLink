@@ -3,7 +3,7 @@ A leightweight web app to crete public URLs for Markdown files.
 
 Having switched from using Evernote to Markdown files I missed the ability to create a public links to notes (and for that link to be kept up to date with any changes to the note). I created this app to fill that need.
 
-Turn this:
+## Turn this:
 
 ```
 # Note Taking Apps
@@ -17,7 +17,7 @@ A truly **minimal** Markdown editor. Typora will give you a seamless experience 
 A **beautiful** and **rich-featured** Markdown editor for iPhone and iPad. 1Writer combines all the basic text editing features you would expect with all the advanced features you will ever need.
 ```
 
-Into this:
+## Into this:
 ![Example](docs/example.png)
 
 
@@ -30,11 +30,9 @@ The following environment variables need to be set for the app to run:
 
 **MDTPL_PUBLISH_PASSWORD** - The password to use when publishing or unpublishing.
 
-**MDTPL_DATABASE_PATH** - Optional. The path and name for the database file. Defaults to database.db in the working directory. 
-
 ## Usage
 ### Publishing
-The following endpoint with publish the specified file and forward the user to the created link:
+The following endpoint will publish the specified file and forward the user to the created link:
 
 ```
 https://{Your Domain}/publish/{File Name to Publish}?password={Your Password}
@@ -71,6 +69,8 @@ Example image / file URL:
 
 `https://notes.exampledomain.com/ea88f1b2-g001-45ba-af7a-af878fe9757c/car.jpg`
 
+A simple CSS stylesheet is included but can be customised as needed.
+
 ## My Setup
 To create and edit my notes I use [Typora](https://typora.io/) on Windows and [1Writer](http://1writerapp.com/) on iOS. Both use a single [Dropbox](https://www.dropbox.com/) folder to keep things in sync.
 
@@ -87,3 +87,9 @@ https://notes.exampledomain.com/publish/[name]?password=MySecurePassword!
 ```
 https://notes.exampledomain.com/unpublish/[name]?password=MySecurePassword!
 ```
+
+## To Do
+* I'm unsure how robust the root image / file publishing is. It works fine in my specific setup but may need futher work in terms of identifying just those cases.
+* MDTPL_DATABASE_PATH currently requires a trailing slash. Ideally this would be added as required.
+* The default CSS needs some improvement.
+* Sub-folder support.
