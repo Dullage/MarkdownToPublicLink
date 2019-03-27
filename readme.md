@@ -3,7 +3,7 @@ A leightweight web app to crete public URLs for Markdown files.
 
 Having switched from using Evernote to Markdown files I missed the ability to create a public links to notes (and for that link to be kept up to date with any changes to the note). I created this app to fill that need.
 
-## Turn this:
+### Turn this:
 
 ```
 # Note Taking Apps
@@ -17,7 +17,7 @@ A truly **minimal** Markdown editor. Typora will give you a seamless experience 
 A **beautiful** and **rich-featured** Markdown editor for iPhone and iPad. 1Writer combines all the basic text editing features you would expect with all the advanced features you will ever need.
 ```
 
-## Into this:
+### Into this:
 ![Example](docs/example.png)
 
 
