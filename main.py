@@ -7,7 +7,7 @@ from uuid import uuid4
 from bs4 import BeautifulSoup
 import language
 
-BASE_PATH = environ["MDTPL_BASE_PATH"]  # TODO: Check for trailing slash.
+BASE_PATH = environ["MDTPL_BASE_PATH"]
 PUBLISH_PASSWORD = environ["MDTPL_PUBLISH_PASSWORD"]
 
 app = Flask(__name__)
@@ -80,7 +80,7 @@ class PublishedFile(db.Model):
 
     @property
     def file_path(self):
-        return BASE_PATH + self.filename
+        return path.join(BASE_PATH, self.filename)
 
     def unpublish_attachments(self):
         for attachment in self.attachments:
@@ -164,8 +164,7 @@ def publish(filename):
         return msg(language.BAD_EXTENSION, 400, api_call)
 
     # Check the file exists
-    file_path = BASE_PATH + filename
-    if not path.isfile(file_path):
+    if not path.isfile(path.join(BASE_PATH, filename)):
         return msg(language.FILE_NOT_FOUND, 400, api_call)
 
     # Already published?

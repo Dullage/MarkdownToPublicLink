@@ -90,6 +90,5 @@ https://notes.exampledomain.com/unpublish/[name]?password=MySecurePassword!
 
 ## To Do
 * I'm unsure how robust the root image / file publishing is. It works fine in my specific setup but may need futher work in terms of identifying just those cases.
-* MDTPL_DATABASE_PATH currently requires a trailing slash. Ideally this would be added as required.
 * The default CSS needs some improvement.
 * Sub-folder support.
