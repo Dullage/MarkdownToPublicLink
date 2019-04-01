@@ -47,7 +47,7 @@ html {
 
 /* Content */
 h1, h2, h3, h4, h5, h6 {
-    margin: 20px 0 6px 0;
+    margin: 30px 0 6px 0;
 }
 
 h1 {
@@ -59,12 +59,13 @@ h1:after {
     display: block;
     border-top: 1px solid #bdbbbb;
     width: 66%;
-    margin: 50px auto 50px auto;
+    margin: 50px auto;
 }
 
 p {
     font-size: 18px;
-    line-height: 1.8
+    line-height: 2;
+    margin: 0 0 1em 0;
 }
 
 img {
@@ -74,17 +75,17 @@ img {
 ol, ul {
     padding: 0 0 0 20px;
     list-style-position: inside;
-    margin: 0 0 6px 0;
+    margin: 1em 0;
 }
 
 pre {
-    margin: 6px 0;
+    margin: 1em 0;
 }
 
 table {
     border: none;
     border-collapse: collapse;
-    width: 100%;
+    /* width: 100%; */
 }
 
 tr:nth-child(even) {
@@ -92,12 +93,11 @@ tr:nth-child(even) {
 }
 
 td {
-    border: none;
     padding: 5px 20px 5px 0px;
 }
 
 blockquote {
-    margin: 0 0 6px 40px;
+    margin: 1em 0 1em 40px;
     padding: 0 0 0 6px;
     color: #999797;
     border-left: 4px solid #ccc;
@@ -129,6 +129,6 @@ hr {
     margin: 0 20px;
 }
 
-color-inherit {
+.color-inherit {
     color: inherit;
 }
