@@ -75,8 +75,11 @@ A simple CSS stylesheet (stylesheet.css) is included but can be customised as ne
 This app uses the [markdown2](https://github.com/trentm/python-markdown2) python package which was written to closely match the behaviour of [the original Perl implementation](https://daringfireball.net/projects/markdown/) and so the sytax support documented there should be supported. Additionally the following "extras" have been enabled:
 
 **fenced-code-blocks** - Allows a code block to not have to be indented by fencing it with '```' on a line before and after. Based on [GitHub Flavoured Markdown](http://github.github.com/github-flavored-markdown/) with support for syntax highlighting.
+
 **tag-friendly** - Requires atx style headers to have a space between the # and the header text. Useful to allow #tags without converting them to headers.
+
 **tables** - Allows tables, based on [GitHub Flavoured Markdown](http://github.github.com/github-flavored-markdown/).
+
 **header-ids** - Adds "id" attributes to headers. The id value is a slug of the header text. Useful for linking to a specific header.
 
 ## My Setup
