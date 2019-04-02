@@ -69,7 +69,15 @@ Example image / file URL:
 
 `https://notes.exampledomain.com/ea88f1b2-g001-45ba-af7a-af878fe9757c/car.jpg`
 
-A simple CSS stylesheet is included but can be customised as needed.
+A simple CSS stylesheet (stylesheet.css) is included but can be customised as needed. Additionally codefence.css styles codefences with [Pygments](http://pygments.org/) using the Manni style.
+
+## Markdown Support
+This app uses the [markdown2](https://github.com/trentm/python-markdown2) python package which was written to closely match the behaviour of [the original Perl implementation](https://daringfireball.net/projects/markdown/) and so the sytax support documented there should be supported. Additionally the following "extras" have been enabled:
+
+**fenced-code-blocks** - Allows a code block to not have to be indented by fencing it with '```' on a line before and after. Based on [GitHub Flavoured Markdown](http://github.github.com/github-flavored-markdown/) with support for syntax highlighting.
+**tag-friendly** - Requires atx style headers to have a space between the # and the header text. Useful to allow #tags without converting them to headers.
+**tables** - Allows tables, based on [GitHub Flavoured Markdown](http://github.github.com/github-flavored-markdown/).
+**header-ids** - Adds "id" attributes to headers. The id value is a slug of the header text. Useful for linking to a specific header.
 
 ## My Setup
 To create and edit my notes I use [Typora](https://typora.io/) on Windows and [1Writer](http://1writerapp.com/) on iOS. Both use a single [Dropbox](https://www.dropbox.com/) folder to keep things in sync.
@@ -90,5 +98,4 @@ https://notes.exampledomain.com/unpublish/[name]?password=MySecurePassword!
 
 ## To Do
 * I'm unsure how robust the root image / file publishing is. It works fine in my specific setup but may need futher work in terms of identifying just those cases.
-* Code block CSS styling.
-* Sub-folder support.
+* Sub-folder support?
