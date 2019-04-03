@@ -3,6 +3,7 @@
     margin: 0;
     padding: 0; 
     box-sizing: border-box;
+    color: #222222;
 }
 
 html {
@@ -16,12 +17,10 @@ html {
 }
 
 
-/* Message */
+/* Index */
 #message-body {
     margin: 0 auto;
     padding: 20px;
-    background-image: linear-gradient(10deg, #3C35D1, #7B75FD);
-    color: white;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -42,6 +41,21 @@ html {
 
 #message {
     font-size: 60px;
+}
+
+.center {
+    margin: 0 auto;
+}
+
+@keyframes blink {
+    50% {opacity: 0;}
+}
+
+.cursor {
+    animation-name: blink;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-timing-function: step-start;
 }
 
 

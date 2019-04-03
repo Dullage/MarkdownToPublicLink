@@ -1,0 +1,30 @@
+{% from 'header.html' import header %}
+
+<!doctype html>
+
+<html lang="en">
+
+{{ header("Markdown To Public Link") }}
+
+<body>
+  <div id="inner-body">
+
+    <h1>All Published Files</h1>
+
+    <table class="center">
+      <thead>
+        <th>File</th>
+        <th>Link</th>
+      </thead>
+      {% for file in published_files %}
+        <tr>
+          <td>{{ file.filename }}</td>
+          <td><a href="{{ file.url }}">{{ file.url }}</a></td>
+        </tr>
+      {% endfor %}
+    </table>
+
+  </div>
+</body>
+
+</html>

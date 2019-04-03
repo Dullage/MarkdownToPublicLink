@@ -71,6 +71,11 @@ Example image / file URL:
 
 A simple CSS stylesheet (stylesheet.css) is included but can be customised as needed. Additionally codefence.css styles codefences with [Pygments](http://pygments.org/) using the Manni style.
 
+### All Published Notes
+To see a list of all published notes simply navigate to the root / index page using the password in the URL e.g. 
+
+`https://notes.exampledomain.com/?password=MySecurePassword!`
+
 ## Markdown Support
 This app uses the [markdown2](https://github.com/trentm/python-markdown2) python package which was written to closely match the behaviour of [the original Perl implementation](https://daringfireball.net/projects/markdown/) and so the sytax support documented there should be supported. Additionally the following "extras" have been enabled:
 
@@ -102,3 +107,4 @@ https://notes.exampledomain.com/unpublish/[name]?password=MySecurePassword!
 ## To Do
 * I'm unsure how robust the root image / file publishing is. It works fine in my specific setup but may need futher work in terms of identifying just those cases.
 * Sub-folder support?
+* Security improvements. A single password that can be passed as a URL argument isn't strong but it necessary for the 1Writer action and is secure enough for my use case. Perhaps this can be improved?

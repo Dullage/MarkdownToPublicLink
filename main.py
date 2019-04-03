@@ -140,11 +140,23 @@ db.create_all()
 # region Routes
 @app.route("/")
 def index():
-    return render_template(
-        "message.html",
-        message=language.INDEX_MESSAGE
+    # Password Check
+    declared_password = request.args.get("password")
+
+    if password_invalid(declared_password):
+        return render_template(
+            "message.html",
+            message=language.INDEX_MESSAGE
+        )
+
+    published_files = PublishedFile.query.filter_by(
+        parent_id=None
     )
 
+    return render_template(
+        "list.html",
+        published_files=published_files
+    )
 
 @app.route("/publish/<filename>")
 @app.route("/api/publish/<filename>")
