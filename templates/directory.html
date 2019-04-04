@@ -15,14 +15,24 @@
       <thead>
         <th>File</th>
         <th>Link</th>
+        <th></th>
       </thead>
       {% for file in published_files %}
         <tr>
           <td>{{ file.filename }}</td>
           <td><a href="{{ file.url }}">{{ file.url }}</a></td>
+          <td>
+            <a href="/unpublish/{{ file.filename }}">
+              <span class="mdi mdi-delete color-inherit"></span>
+            </a>
+          </td>
         </tr>
       {% endfor %}
     </table>
+
+    <div id="footer">
+      <span><a href="https://github.com/Dullage/MarkdownToPublicLink"><span class="mdi mdi-github-circle color-inherit"></span>  MarkdownToPublicLink</a></span>
+    </div>  
 
   </div>
 </body>

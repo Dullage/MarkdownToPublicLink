@@ -28,15 +28,23 @@ The following environment variables need to be set for the app to run:
 
 **MDTPL_BASE_PATH** - The path at which your Markdown notes are stored.
 
-**MDTPL_PUBLISH_PASSWORD** - The password to use when publishing or unpublishing.
+**MDTPL_ADMIN_PASSWORD** - The password to use when publishing or unpublishing.
+
+These environment variables are optional:
+
+**MDTPL_SESSION_KEY** - A password used to sign the session cookie. Randomly generated if not set.
+
+**MDTPL_SITE_NAME** - The title to display on the index page. Defaults to "Markdown to Public Link".
 
 ## Usage
 ### Publishing
 The following endpoint will publish the specified file and forward the user to the created link:
 
 ```
-https://{Your Domain}/publish/{File Name to Publish}?password={Your Password}
+https://{Your Domain}/publish/{File Name to Publish}
 ```
+
+*Note: If not already signed in you will be asked for the admin password. You can choose to remember the device to prevent being asked again.*
 
 Alternatively the equivelant /api endpoint can be called which will instead return a JSON response with the link:
 
@@ -53,8 +61,10 @@ Example response:
 ### Unpublishing
 As above only swap "publish" with "unpublish". Example:
 
-`https://notes.exampledomain.com/unpublish/Holiday%20Notes.md?password=MySecurePassword!
+`https://notes.exampledomain.com/unpublish/Holiday%20Notes.md
 `
+
+*Note: If not already signed in you will be asked for the admin password.*
 
 ### Accessing Notes
 Notes are published using a UUID as the key. Example link:
@@ -71,10 +81,12 @@ Example image / file URL:
 
 A simple CSS stylesheet (stylesheet.css) is included but can be customised as needed. Additionally codefence.css styles codefences with [Pygments](http://pygments.org/) using the Manni style.
 
-### All Published Notes
-To see a list of all published notes simply navigate to the root / index page using the password in the URL e.g. 
+### Directory
+To see a list of all published notes simply navigate to the /directory e.g. 
 
-`https://notes.exampledomain.com/?password=MySecurePassword!`
+`https://notes.exampledomain.com/directory`
+
+*Note: If not already signed in you will be asked for the admin password.*
 
 ## Markdown Support
 This app uses the [markdown2](https://github.com/trentm/python-markdown2) python package which was written to closely match the behaviour of [the original Perl implementation](https://daringfireball.net/projects/markdown/) and so the sytax support documented there should be supported. Additionally the following "extras" have been enabled:
@@ -90,21 +102,20 @@ This app uses the [markdown2](https://github.com/trentm/python-markdown2) python
 ## My Setup
 To create and edit my notes I use [Typora](https://typora.io/) on Windows and [1Writer](http://1writerapp.com/) on iOS. Both use a single [Dropbox](https://www.dropbox.com/) folder to keep things in sync.
 
-My MDTPL_DATABASE_PATH also points to the Dropbox folder and so is also kept in sync. [Dropbox for Linux](https://www.dropbox.com/en_GB/install-linux) is a great way to achieve this.
+My MDTPL_BASE_PATH also points to the Dropbox folder and so is also kept in sync. [Dropbox for Linux](https://www.dropbox.com/en_GB/install-linux) is a great way to achieve this.
 
 I *can* easily publish a note by calling the correct publish URL in my browser...but...the 1Writer app has a great feature called URL Actions that allows you to easily call a custom URL for a particular note with some of the notes information (such as filename) in the call. Here are the 2 actions I have set up:
 
 **Publish 1Writer Action**
 ```
-https://notes.exampledomain.com/publish/[name]?password=MySecurePassword!
+https://notes.exampledomain.com/publish/[name]
 ```
 
 **Unpublish 1Writer Action**
 ```
-https://notes.exampledomain.com/unpublish/[name]?password=MySecurePassword!
+https://notes.exampledomain.com/unpublish/[name]
 ```
 
 ## To Do
 * I'm unsure how robust the root image / file publishing is. It works fine in my specific setup but may need futher work in terms of identifying just those cases.
 * Sub-folder support?
-* Security improvements. A single password that can be passed as a URL argument isn't strong but it necessary for the 1Writer action and is secure enough for my use case. Perhaps this can be improved?

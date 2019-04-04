@@ -18,7 +18,7 @@ html {
 
 
 /* Index */
-#message-body {
+#index-body {
     margin: 0 auto;
     padding: 20px;
     height: 100%;
@@ -30,32 +30,63 @@ html {
     max-width: 1024px;
 }
 
-#message-content {
-    text-align: center;
-}
-
-#md-icon{
+#site-icon{
     font-size: 80px;
     margin: 5px 20px 0 0;
 }
 
-#message {
+#site-name {
     font-size: 60px;
-}
-
-.center {
-    margin: 0 auto;
+    margin: 0 0 20px 0;
 }
 
 @keyframes blink {
     50% {opacity: 0;}
 }
-
 .cursor {
     animation-name: blink;
     animation-duration: 1s;
     animation-iteration-count: infinite;
     animation-timing-function: step-start;
+}
+
+#message {
+    font-size: 32px;
+    color: #e23600;
+}
+
+@media screen and (max-width: 750px) {
+    #site-name {
+        font-size: 26px;
+    }
+
+    #message {
+        font-size: 18px;
+    }
+}
+
+#chevron {
+    font-size: 18px;
+}
+
+input[type="password"] {
+    width: 240px;
+    height: 30px;
+    border-style: none;
+    font-size: 18px;
+}
+input[type="password"]:focus {
+    outline: none;
+}
+
+label {
+    color: #11111180;
+}
+
+
+/* Directory */
+.center {
+    margin: 0 auto;
 }
 
 

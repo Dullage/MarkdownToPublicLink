@@ -1,19 +1,26 @@
 from flask import Flask, Markup, render_template, url_for, redirect, request,\
-    jsonify, send_from_directory
+    jsonify, send_from_directory, session
 from flask_sqlalchemy import SQLAlchemy
-from os import environ, path
+from os import environ, path, urandom
 from markdown2 import markdown
 from uuid import uuid4
 from bs4 import BeautifulSoup
 import language
+from functools import wraps
+from datetime import timedelta
 
 BASE_PATH = environ["MDTPL_BASE_PATH"]
-PUBLISH_PASSWORD = environ["MDTPL_PUBLISH_PASSWORD"]
+ADMIN_PASSWORD = environ["MDTPL_ADMIN_PASSWORD"]
+
+SESSION_KEY = environ.get("MDTPL_SESSION_KEY", urandom(16))
+SITE_NAME = environ.get("MDTPL_SITE_NAME", language.SITE_NAME)
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] \
     = "sqlite:///database.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.secret_key = SESSION_KEY
+app.permanent_session_lifetime = timedelta(days=365)
 
 db = SQLAlchemy(app)
 
@@ -27,12 +34,22 @@ VALID_EXTENSIONS = [
 
 
 # region Helper Functions
-def password_invalid(password):
-    if password is None:
-        return True
-    if password != PUBLISH_PASSWORD:
-        return True
-    return False
+def login_required(func):
+    @wraps(func)
+    def wrapped_func(*args, **kwargs):
+        if 'logged_in' in session:
+            return func(*args, **kwargs)
+
+        if request.headers.get("password") == ADMIN_PASSWORD:
+            return func(*args, **kwargs)
+
+        return render_template(
+            "index.html",
+            site_name=SITE_NAME,
+            login=True,
+            original_url=request.url
+        ), 401
+    return wrapped_func
 
 
 def msg(message, code, api_call):
@@ -45,7 +62,8 @@ def msg(message, code, api_call):
         }), code
     else:
         return render_template(
-            "message.html",
+            "index.html",
+            site_name=SITE_NAME,
             message=message
         ), code
 # endregion
@@ -138,38 +156,37 @@ db.create_all()
 
 
 # region Routes
+@app.route("/dologin", methods=["POST"])
+def dologin():
+    original_url = request.form["original_url"]
+
+    if request.form["password"] == ADMIN_PASSWORD:
+        session["logged_in"] = True
+        if request.form.get("remember_me"):
+            session.permanent = True
+
+    return redirect(original_url)
+
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for('index'))
+
+
 @app.route("/")
 def index():
-    # Password Check
-    declared_password = request.args.get("password")
-
-    if password_invalid(declared_password):
-        return render_template(
-            "message.html",
-            message=language.INDEX_MESSAGE
-        )
-
-    published_files = PublishedFile.query.filter_by(
-        parent_id=None
-    )
-
     return render_template(
-        "list.html",
-        published_files=published_files
+        "index.html",
+        site_name=SITE_NAME
     )
+
 
 @app.route("/publish/<filename>")
 @app.route("/api/publish/<filename>")
+@login_required
 def publish(filename):
     api_call = (request.url_rule.rule == "/api/publish/<filename>")
-
-    # Password Check
-    declared_password = request.headers.get(
-        "password",
-        request.args.get("password")
-    )
-    if password_invalid(declared_password):
-        return msg(language.INVALID_PASSWORD, 401, api_call)
 
     # Check the extension
     if path.splitext(filename)[1] not in VALID_EXTENSIONS:
@@ -200,16 +217,9 @@ def publish(filename):
 
 @app.route("/unpublish/<filename>")
 @app.route("/api/unpublish/<filename>")
+@login_required
 def unpublish(filename):
     api_call = (request.url_rule.rule == "/api/unpublish/<filename>")
-
-    # Password Check
-    declared_password = request.headers.get(
-        "password",
-        request.args.get("password")
-    )
-    if password_invalid(declared_password):
-        return msg(language.INVALID_PASSWORD, 401, api_call)
 
     published_file = PublishedFile.query.filter_by(
         filename=filename
@@ -234,14 +244,16 @@ def content(id):
 
     if published_file is None:
         return render_template(
-            "message.html",
+            "index.html",
+            site_name=SITE_NAME,
             message=language.LINK_NOT_FOUND
         )
 
     # Check the file still exists
     if published_file.is_missing:
         return render_template(
-            "message.html",
+            "index.html",
+            site_name=SITE_NAME,
             message=language.FILE_NOT_FOUND
         )
 
@@ -262,4 +274,17 @@ def attachment(id, filename):
         return None, 404
 
     return send_from_directory(BASE_PATH, file.filename)
+
+
+@app.route("/directory")
+@login_required
+def directory():
+    published_files = PublishedFile.query.filter_by(
+        parent_id=None
+    )
+
+    return render_template(
+        "directory.html",
+        published_files=published_files
+    )
 # endregion
