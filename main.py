@@ -1,13 +1,15 @@
-from flask import Flask, Markup, render_template, url_for, redirect, request,\
-    jsonify, send_from_directory, session
-from flask_sqlalchemy import SQLAlchemy
-from os import environ, path, urandom
-from markdown2 import markdown
-from uuid import uuid4
-from bs4 import BeautifulSoup
-import language
-from functools import wraps
 from datetime import timedelta
+from functools import wraps
+from os import environ, path, urandom
+from uuid import uuid4
+
+from bs4 import BeautifulSoup
+from flask import (Flask, Markup, jsonify, redirect, render_template, request,
+                   send_from_directory, session, url_for)
+from flask_sqlalchemy import SQLAlchemy
+from markdown2 import markdown
+
+import language
 
 BASE_PATH = environ["MDTPL_BASE_PATH"]
 ADMIN_PASSWORD = environ["MDTPL_ADMIN_PASSWORD"]
