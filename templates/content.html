@@ -11,12 +11,12 @@
 
     {{ published_file.html }}
 
-  </div>
+    <div id="footer">
+      <span id="footer-filename">{{ published_file.filename }}</span>
+      <span id="footer-separator">|</span>
+      <span>Published using <a href="https://github.com/Dullage/MarkdownToPublicLink"><span class="mdi mdi-github-circle color-inherit"></span>  MarkdownToPublicLink</a></span>
+    </div>
 
-  <div id="footer">
-    <span>{{ published_file.filename }}</span>
-    <span class="footer-separator">|</span>
-    <span>Published using <a href="https://github.com/Dullage/MarkdownToPublicLink"><span class="mdi mdi-github-circle color-inherit"></span>  MarkdownToPublicLink</a></span>
   </div>
 </body>
 

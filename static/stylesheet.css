@@ -79,8 +79,15 @@ input[type="password"]:focus {
     outline: none;
 }
 
-label {
+
+#remember_me {
+    display: none;
+}
+#remember_me_label {
     color: #11111180;
+}
+#remember_me:checked + #remember_me_label {
+    color: #27a227;
 }
 
 
@@ -127,6 +134,18 @@ pre {
     margin: 1em 0;
     padding: 20px;
     overflow: auto;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 14px;
+}
+
+code {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 14px;
+}
+
+code span {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 14px;
 }
 
 table {
@@ -176,10 +195,20 @@ hr {
     font-weight: bold;
 }
 
-.footer-separator {
+#footer-separator {
     margin: 0 20px;
 }
 
 .color-inherit {
     color: inherit;
+}
+
+@media screen and (max-width: 750px) {
+    #footer-filename {
+        display: block;
+    }
+
+    #footer-separator {
+        display: none;
+    }
 }
