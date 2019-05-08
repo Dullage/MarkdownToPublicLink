@@ -1,5 +1,5 @@
 # MarkdownToPublicLink
-A leightweight web app to crete public URLs for Markdown files.
+A lightweight web app to create public URLs for Markdown files.
 
 Having switched from using Evernote to Markdown files I missed the ability to create a public links to notes (and for that link to be kept up to date with any changes to the note). I created this app to fill that need.
 
@@ -46,7 +46,7 @@ https://{Your Domain}/publish/{File Name to Publish}
 
 *Note: If not already signed in you will be asked for the admin password. You can choose to remember the device to prevent being asked again.*
 
-Alternatively the equivelant /api endpoint can be called which will instead return a JSON response with the link:
+Alternatively the equivalent /api endpoint can be called which will instead return a JSON response with the link:
 
 ```
 https://{Your Domain}/api/publish/{File Name to Publish}
@@ -89,7 +89,7 @@ To see a list of all published notes simply navigate to the /directory e.g.
 *Note: If not already signed in you will be asked for the admin password.*
 
 ## Markdown Support
-This app uses the [markdown2](https://github.com/trentm/python-markdown2) python package which was written to closely match the behaviour of [the original Perl implementation](https://daringfireball.net/projects/markdown/) and so the sytax support documented there should be supported. Additionally the following "extras" have been enabled:
+This app uses the [markdown2](https://github.com/trentm/python-markdown2) python package which was written to closely match the behaviour of [the original Perl implementation](https://daringfireball.net/projects/markdown/) and so the syntax support documented there should be supported. Additionally the following "extras" have been enabled:
 
 **fenced-code-blocks** - Allows a code block to not have to be indented by fencing it with '```' on a line before and after. Based on [GitHub Flavoured Markdown](http://github.github.com/github-flavored-markdown/) with support for syntax highlighting.
 
@@ -98,6 +98,9 @@ This app uses the [markdown2](https://github.com/trentm/python-markdown2) python
 **tables** - Allows tables, based on [GitHub Flavoured Markdown](http://github.github.com/github-flavored-markdown/).
 
 **header-ids** - Adds "id" attributes to headers. The id value is a slug of the header text. Useful for linking to a specific header.
+
+### Table of Contents
+This app also includes a custom handler to turn any mention of `#toc` into a table of contents (providing it is lowercase and in its own paragraph). These tables only include links to headers within the same section so, for example, if you place a `#toc` underneath an h2, only h3-h6 links underneath that h2 will be included.
 
 ## My Setup
 To create and edit my notes I use [Typora](https://typora.io/) on Windows and [1Writer](http://1writerapp.com/) on iOS. Both use a single [Dropbox](https://www.dropbox.com/) folder to keep things in sync.

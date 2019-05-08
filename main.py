@@ -10,6 +10,7 @@ from flask_sqlalchemy import SQLAlchemy
 from markdown2 import markdown
 
 import language
+from helpers import render_tocs
 
 BASE_PATH = environ["MDTPL_BASE_PATH"]
 ADMIN_PASSWORD = environ["MDTPL_ADMIN_PASSWORD"]
@@ -18,39 +19,36 @@ SESSION_KEY = environ.get("MDTPL_SESSION_KEY", urandom(16))
 SITE_NAME = environ.get("MDTPL_SITE_NAME", language.SITE_NAME)
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] \
-    = "sqlite:///database.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.secret_key = SESSION_KEY
 app.permanent_session_lifetime = timedelta(days=365)
 
 db = SQLAlchemy(app)
 
-VALID_EXTENSIONS = [
-    ".md",
-    ".markdown",
-    ".mdown",
-    ".mkdn",
-    ".mkd"
-]
+VALID_EXTENSIONS = [".md", ".markdown", ".mdown", ".mkdn", ".mkd"]
 
 
 # region Helper Functions
 def login_required(func):
     @wraps(func)
     def wrapped_func(*args, **kwargs):
-        if 'logged_in' in session:
+        if "logged_in" in session:
             return func(*args, **kwargs)
 
         if request.headers.get("password") == ADMIN_PASSWORD:
             return func(*args, **kwargs)
 
-        return render_template(
-            "index.html",
-            site_name=SITE_NAME,
-            login=True,
-            original_url=request.url
-        ), 401
+        return (
+            render_template(
+                "index.html",
+                site_name=SITE_NAME,
+                login=True,
+                original_url=request.url,
+            ),
+            401,
+        )
+
     return wrapped_func
 
 
@@ -59,35 +57,35 @@ def msg(message, code, api_call):
     key of message. If False the user is presented with the message on a
     formatted HTML page. Note: The code is only used if api_call is True."""
     if api_call:
-        return jsonify({
-            "message": message
-        }), code
+        return jsonify({"message": message}), code
     else:
-        return render_template(
-            "index.html",
-            site_name=SITE_NAME,
-            message=message
-        ), code
+        return (
+            render_template(
+                "index.html", site_name=SITE_NAME, message=message
+            ),
+            code,
+        )
+
+
 # endregion
 
 
 # region Database
 class PublishedFile(db.Model):
-    __tablename__ = 'published_file'
+    __tablename__ = "published_file"
 
     id = db.Column(db.String(36), primary_key=True)
     filename = db.Column(db.String(255), unique=True, nullable=False)
-    parent_id = db.Column(db.String(36), db.ForeignKey('published_file.id'))
+    parent_id = db.Column(db.String(36), db.ForeignKey("published_file.id"))
 
     def __init__(self, filename, parent_id=None):
         self.id = str(uuid4())
         self.filename = filename
         self.parent_id = parent_id
+        self.toc_html = ""
 
     parent = db.relationship(
-        "PublishedFile",
-        backref="attachments",
-        remote_side=[id]
+        "PublishedFile", backref="attachments", remote_side=[id]
     )
 
     @property
@@ -110,7 +108,7 @@ class PublishedFile(db.Model):
     def publish_attachments(self, html):
         self.unpublish_attachments()
 
-        soup = BeautifulSoup(html, 'html.parser')
+        soup = BeautifulSoup(html, "html.parser")
 
         images = soup.find_all("img")
         for image in images:
@@ -126,7 +124,7 @@ class PublishedFile(db.Model):
 
         db.session.commit()
 
-        return Markup(soup)
+        return str(soup)
 
     @property
     def html(self):
@@ -137,13 +135,16 @@ class PublishedFile(db.Model):
                     "fenced-code-blocks",
                     "tag-friendly",
                     "tables",
-                    "header-ids"
-                ]
+                    "header-ids",
+                ],
             )
 
         html = self.publish_attachments(html)
 
-        return html
+        if "#toc" in html:
+            html = render_tocs(html)
+
+        return Markup(html)
 
     @property
     def is_missing(self):
@@ -173,22 +174,19 @@ def dologin():
 @app.route("/logout")
 def logout():
     session.clear()
-    return redirect(url_for('index'))
+    return redirect(url_for("index"))
 
 
 @app.route("/")
 def index():
-    return render_template(
-        "index.html",
-        site_name=SITE_NAME
-    )
+    return render_template("index.html", site_name=SITE_NAME)
 
 
 @app.route("/publish/<filename>")
 @app.route("/api/publish/<filename>")
 @login_required
 def publish(filename):
-    api_call = (request.url_rule.rule == "/api/publish/<filename>")
+    api_call = request.url_rule.rule == "/api/publish/<filename>"
 
     # Check the extension
     if path.splitext(filename)[1] not in VALID_EXTENSIONS:
@@ -199,9 +197,7 @@ def publish(filename):
         return msg(language.FILE_NOT_FOUND, 400, api_call)
 
     # Already published?
-    published_file = PublishedFile.query.filter_by(
-        filename=filename
-    ).first()
+    published_file = PublishedFile.query.filter_by(filename=filename).first()
 
     # Publish
     if published_file is None:
@@ -210,9 +206,7 @@ def publish(filename):
         db.session.commit()
 
     if api_call:
-        return jsonify({
-            "url": published_file.url
-        })
+        return jsonify({"url": published_file.url})
     else:
         return redirect(published_file.url)
 
@@ -221,11 +215,9 @@ def publish(filename):
 @app.route("/api/unpublish/<filename>")
 @login_required
 def unpublish(filename):
-    api_call = (request.url_rule.rule == "/api/unpublish/<filename>")
+    api_call = request.url_rule.rule == "/api/unpublish/<filename>"
 
-    published_file = PublishedFile.query.filter_by(
-        filename=filename
-    ).first()
+    published_file = PublishedFile.query.filter_by(filename=filename).first()
 
     if published_file is None:
         return msg(language.NOT_PUBLISHED, 400, api_call)
@@ -240,36 +232,27 @@ def unpublish(filename):
 @app.route("/<id>")
 def content(id):
     published_file = PublishedFile.query.filter_by(
-        id=id,
-        parent_id=None
+        id=id, parent_id=None
     ).first()
 
     if published_file is None:
         return render_template(
-            "index.html",
-            site_name=SITE_NAME,
-            message=language.LINK_NOT_FOUND
+            "index.html", site_name=SITE_NAME, message=language.LINK_NOT_FOUND
         )
 
     # Check the file still exists
     if published_file.is_missing:
         return render_template(
-            "index.html",
-            site_name=SITE_NAME,
-            message=language.FILE_NOT_FOUND
+            "index.html", site_name=SITE_NAME, message=language.FILE_NOT_FOUND
         )
 
-    return render_template(
-        "content.html",
-        published_file=published_file
-    )
+    return render_template("content.html", published_file=published_file)
 
 
 @app.route("/<id>/<filename>")
 def attachment(id, filename):
     file = PublishedFile.query.filter_by(
-        parent_id=id,
-        filename=filename
+        parent_id=id, filename=filename
     ).first()
 
     if file is None:
@@ -281,12 +264,9 @@ def attachment(id, filename):
 @app.route("/directory")
 @login_required
 def directory():
-    published_files = PublishedFile.query.filter_by(
-        parent_id=None
-    )
+    published_files = PublishedFile.query.filter_by(parent_id=None)
 
-    return render_template(
-        "directory.html",
-        published_files=published_files
-    )
+    return render_template("directory.html", published_files=published_files)
+
+
 # endregion

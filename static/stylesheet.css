@@ -97,6 +97,29 @@ input[type="password"]:focus {
 }
 
 
+/* Table of Contents */
+ul.table-of-contents {
+    padding: 0;
+    list-style-type: none;
+    text-align: center;
+}
+
+ul.table-of-contents a {
+    text-decoration: none;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.toc-h1 {
+    font-size: 1.5em;
+    margin: 0.5em 0;
+}
+
+.toc-h2 {
+    font-size: 1.2em;
+    margin: 0.3em 0;
+}
+
+
 /* Content */
 h1, h2, h3, h4, h5, h6 {
     margin: 30px 0 6px 0;
